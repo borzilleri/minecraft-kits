@@ -16,7 +16,7 @@ public class Kits extends Mod {
 		Kits.kits.load();
 	}
 
-	public boolean parseCommand(Player player, String[] tokens, Boolean isAdmin) {
+	public boolean parseCommand(Player player, String[] tokens) {
 		if( tokens.length < 1 ) return false;
 		String command = tokens[0].substring(1);
 
@@ -24,7 +24,8 @@ public class Kits extends Mod {
 
 			return true;
 		}
-		else if( command.equalsIgnoreCase("kit") && tokens.length < 2 ) {
+		else if((command.equalsIgnoreCase("kit") && tokens.length < 2) ||
+						(command.equalsIgnoreCase("kits")) ) {
 			player.sendPlayerMessage("Available Kits:", ColorEnum.Gray);
 			kits.printKits(player);
 			return true;
@@ -36,12 +37,16 @@ public class Kits extends Mod {
 
 		return false;
 	}
-	public boolean onPlayerChat(Player player, String command, Boolean isAdmin) {
+
+	@Override
+	public boolean onPlayerChat(Player player, String command) {
 		String[] tokens = command.split(" ");
-		return this.parseCommand(player, tokens, isAdmin);
+		return this.parseCommand(player, tokens);
 	}
-	public boolean onPlayerCommand(Player player, String[] tokens, Boolean isAdmin) {
-		return this.parseCommand(player, tokens, isAdmin);
+
+	@Override
+	public boolean onPlayerCommand(Player player, String[] tokens) {
+		return this.parseCommand(player, tokens);
 	}
 
 

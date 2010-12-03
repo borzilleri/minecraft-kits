@@ -12,25 +12,6 @@ import java.util.Map;
 public class Kitlist extends FileLoader {
 	protected LinkedHashMap<String, Kit> kits;
 
-	protected class Kit {
-		private String name;
-		private Integer itemId;
-		private Integer number;
-		public String getName() {
-			return name;
-		}
-		public Integer getItemId() {
-			return itemId;
-		}
-		public Integer getNumber() {
-			return number;
-		}
-		public Kit(String name, Integer id, Integer num) {
-			this.name = name;
-			this.itemId = id;
-			this.number = num;
-		}
-	}
 
 	public Kitlist() {
 		this.filename = "kits.txt";
@@ -39,26 +20,17 @@ public class Kitlist extends FileLoader {
 
 	public void printKits(Player player) {
 		Kit thisKit;
-		EntityTypeEnum thisItem;
-		MessageBlock[] message = new MessageBlock[2];
-		message[0].setColor(ColorEnum.Gray);
-		message[1].setColor(ColorEnum.LightBlue);
 
 		for( Map.Entry<String, Kit> kitEntry: kits.entrySet() ) {
 			thisKit = kitEntry.getValue();
-			thisItem = World.getMiniblocksOfType(thisKit.getItemId()).
-				get(0).getEntityEnum();
-
-			if( null != thisItem ) {
-				message[0].setMessage(thisItem.toString()+": ");
-
-				player.sendPlayerMessage(message);
-			}
+			player.sendPlayerMessage(thisKit.getKitMessage());
 		}
 	}
 	
-	protected void addKit(String name, Integer itemId, Integer number) {
-		Kit temp = new Kit(name,itemId,number);
+	protected void addKit(String[] tokens) {
+		String name = tokens[0];
+		
+		Kit temp = new Kit(name, tokens);
 		kits.put(name, temp);
 	}
 
@@ -69,11 +41,10 @@ public class Kitlist extends FileLoader {
 
 	@Override
 	protected void loadLine(String line) {
-		String[] tokens = line.split(":");
-		Integer number = (tokens.length<3) ? 1 : Integer.parseInt(tokens[2]);
-
+		String[] tokens = line.split(";");
 		if( tokens.length < 2 ) return;
-		this.addKit(tokens[0], Integer.parseInt(tokens[1]), number);
+
+		this.addKit(tokens);
 	}
 
 	@Override
@@ -82,8 +53,7 @@ public class Kitlist extends FileLoader {
 		Kit thisKit;
 		for( Map.Entry<String, Kit> kitEntry: kits.entrySet() ) {
 			thisKit = kitEntry.getValue();
-			line += String.format("%s:%d:%d\r\n",
-				thisKit.getName(), thisKit.getItemId(), thisKit.getNumber());
+			line += String.format("%s\r\n", kitEntry.toString());
 		}
 		return line;
 	}
