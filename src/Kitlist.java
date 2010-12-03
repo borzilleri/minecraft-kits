@@ -23,7 +23,7 @@ public class Kitlist extends FileLoader {
 
 		for( Map.Entry<String, Kit> kitEntry: kits.entrySet() ) {
 			thisKit = kitEntry.getValue();
-			player.sendPlayerMessage(thisKit.getKitMessage());
+			player.sendPlayerMessage(thisKit.chatMessage());
 		}
 	}
 	

@@ -1,6 +1,7 @@
 
-import java.util.LinkedHashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  *
@@ -8,10 +9,11 @@ import java.util.Map;
  */
 public class Kit {
 
-	private String name;
-	protected LinkedHashMap<Integer, Integer> kitItems;
+	protected String name;
+	protected EnumMap<EntityTypeEnum, Integer> kitItems;
 
 	public Kit(String name, String[] items) {
+		kitItems = new EnumMap<EntityTypeEnum,Integer>(EntityTypeEnum.class);
 		this.name = name;
 
 		//EntityTypeEnum itemType;
@@ -31,11 +33,15 @@ public class Kit {
 			}
 
 			try {
-				kitItems.put(Integer.parseInt(item[0]), number);
+				EntityTypeEnum itemEnum = EntityTypeEnum.valueOf(item[0]);
+				kitItems.put(itemEnum, number);
+			}
+			catch( IllegalArgumentException e ) {
+				// No actual item, just ignore it.
 			}
 			catch( Exception e ) {
+				Server.log(Level.SEVERE, e.getMessage());
 			}			
-			//itemType = World.getMiniblocksOfType(Integer.parseInt(item[0])).get(0).getEntityEnum();
 		}
 	}
 	
@@ -47,26 +53,29 @@ public class Kit {
 	public String toString() {
 		String line = this.name+";";
 
-		for( Map.Entry<Integer,Integer> thisItem : kitItems.entrySet()) {
-			line += String.format("%d:%d;", thisItem.getKey(), thisItem.getValue());
+		for( Map.Entry<EntityTypeEnum,Integer> thisItem : kitItems.entrySet()) {
+			line += String.format("%s:%d;", thisItem.getKey().toString(), thisItem.getValue());
 		}
 		return line;
 	}
 
-	public MessageBlock[] getKitMessage() {
-		MessageBlock[] messages = new MessageBlock[2];
-		EntityTypeEnum thisItemType;
-
-		messages[0].setColor(ColorEnum.Gray);
-		messages[0].setMessage(name + ": ");
-		messages[1].setColor(ColorEnum.LightPurple);
-
-		String itemString = "";
-		for (Map.Entry<Integer, Integer> item : kitItems.entrySet()) {
-			itemString += String.format("%d (%d),", item.getKey(), item.getValue());
+	public MessageBlock[] chatMessage() {
+		MessageBlock messages[] = new MessageBlock[(kitItems.size()*2)+1];
+		int i = 0;
+		messages[i] = new MessageBlock(ColorEnum.LightGray, name+": ");		
+		for (Map.Entry<EntityTypeEnum,Integer> item : kitItems.entrySet()) {
+			// Set the current Item's Name messageBlock
+			messages[i+1] = new MessageBlock(ColorEnum.LightPurple, item.getKey().toString());
+			messages[i+2] = new MessageBlock(ColorEnum.LightGray, String.format(
+				" (%d), ", item.getValue()));
+			i = i + 2;
 		}
-		messages[1].setMessage(itemString.substring(0, itemString.length()-1));
-
 		return messages;
+	}
+
+	public void giveTo(Player player) {
+		for( Map.Entry<EntityTypeEnum,Integer> item: kitItems.entrySet()) {
+			player.giveItem(item.getKey(), item.getValue());
+		}
 	}
 }

@@ -21,8 +21,8 @@ public class Kits extends Mod {
 		String command = tokens[0].substring(1);
 
 		if( command.equalsIgnoreCase("help") ) {
-
-			return true;
+			player.sendChat("Kit Commands: !kits; !kit <name>");
+			return tokens[0].substring(0,1).equalsIgnoreCase("!");
 		}
 		else if((command.equalsIgnoreCase("kit") && tokens.length < 2) ||
 						(command.equalsIgnoreCase("kits")) ) {
@@ -31,7 +31,7 @@ public class Kits extends Mod {
 			return true;
 		}
 		else if( command.equalsIgnoreCase("kit") ) {
-			this.generateKit(tokens[1]);
+			this.generateKit(player, tokens[1]);
 			return true;
 		}
 
@@ -50,8 +50,14 @@ public class Kits extends Mod {
 	}
 
 
-	protected void generateKit(String name) {
-		
+	protected void generateKit(Player player, String name) {
+		if( kits.kits.containsKey(name) ) {
+			player.sendChat("Generating Kit:"+name);
+			kits.kits.get(name).giveTo(player);
+		}
+		else {
+			player.sendChat("Unknown Kit: "+name);
+		}
 	}
 	
 }
