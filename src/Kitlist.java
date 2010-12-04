@@ -23,7 +23,7 @@ public class Kitlist extends FileLoader {
 
 		for( Map.Entry<String, Kit> kitEntry: kits.entrySet() ) {
 			thisKit = kitEntry.getValue();
-			player.sendPlayerMessage(thisKit.chatMessage());
+			player.sendChat(thisKit.chatMessage());
 		}
 	}
 	
@@ -50,10 +50,8 @@ public class Kitlist extends FileLoader {
 	@Override
 	protected String saveString() {
 		String line="";
-		Kit thisKit;
 		for( Map.Entry<String, Kit> kitEntry: kits.entrySet() ) {
-			thisKit = kitEntry.getValue();
-			line += String.format("%s\r\n", kitEntry.toString());
+			line += String.format("%s\r\n", kitEntry.getValue().toString());
 		}
 		return line;
 	}
