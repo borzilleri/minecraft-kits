@@ -20,11 +20,7 @@ public class Kits extends Mod {
 		if( tokens.length < 1 ) return false;
 		String command = tokens[0].substring(1);
 
-		if( command.equalsIgnoreCase("help") ) {
-			player.sendChat("Kit Commands: !kits; !kit <name>");
-			return tokens[0].substring(0,1).equalsIgnoreCase("!");
-		}
-		else if((command.equalsIgnoreCase("kit") && tokens.length < 2) ||
+		if((command.equalsIgnoreCase("kit") && tokens.length < 2) ||
 						(command.equalsIgnoreCase("kits")) ) {
 			player.sendChat("Available Kits:", ColorEnum.Gray);
 			kits.printKits(player);
@@ -39,6 +35,11 @@ public class Kits extends Mod {
 	}
 
 	@Override
+	public String toString() {
+		return "!kits; !kit <name>";
+	}
+	
+	@Override
 	public boolean onPlayerChat(Player player, String command) {
 		String[] tokens = command.split(" ");
 		return this.parseCommand(player, tokens);
@@ -48,8 +49,7 @@ public class Kits extends Mod {
 	public boolean onPlayerCommand(Player player, String[] tokens) {
 		return this.parseCommand(player, tokens);
 	}
-
-
+	
 	protected void generateKit(Player player, String name) {
 		if( kits.kits.containsKey(name) ) {
 			player.sendChat("Generating Kit:"+name);
