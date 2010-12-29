@@ -22,7 +22,7 @@ public class Kits extends Mod {
 
 		if((command.equalsIgnoreCase("kit") && tokens.length < 2) ||
 						(command.equalsIgnoreCase("kits")) ) {
-			player.sendChat("Available Kits:", ColorEnum.Gray);
+			player.sendChat("Available Kits:", Color.Gray);
 			kits.printKits(player);
 			return true;
 		}

@@ -10,15 +10,15 @@ import java.util.logging.Level;
 public class Kit {
 
 	protected String name;
-	protected EnumMap<EntityTypeEnum, Integer> entities;
-	protected EnumMap<BlockTypeEnum, Integer> blocks;
+	protected EnumMap<EntityType, Integer> entities;
+	protected EnumMap<BlockType, Integer> blocks;
 
 	public Kit(String name, String[] items) {
-		entities = new EnumMap<EntityTypeEnum,Integer>(EntityTypeEnum.class);
-		blocks = new EnumMap<BlockTypeEnum,Integer>(BlockTypeEnum.class);
+		entities = new EnumMap<EntityType,Integer>(EntityType.class);
+		blocks = new EnumMap<BlockType,Integer>(BlockType.class);
 		this.name = name;
 
-		//EntityTypeEnum itemType;
+		//EntityType itemType;
 		Integer number;
 		Boolean first = true;
 		for(String i: items) {
@@ -35,13 +35,13 @@ public class Kit {
 			}
 			
 			try {
-				EntityTypeEnum itemEnum = EntityTypeEnum.valueOf(item[0]);
+				EntityType itemEnum = EntityType.valueOf(item[0]);
 				entities.put(itemEnum, number);
 			}
 			catch( IllegalArgumentException e ) {
 				// No EntityType found, attempt to find a BlockType.
 				try {
-					BlockTypeEnum blockEnum = BlockTypeEnum.valueOf(item[0]);
+					BlockType blockEnum = BlockType.valueOf(item[0]);
 					blocks.put(blockEnum, number);
 				}
 				catch( IllegalArgumentException e2 ) {
@@ -64,46 +64,41 @@ public class Kit {
 	public String toString() {
 		String line = this.name+";";
 
-		for( Map.Entry<EntityTypeEnum,Integer> thisItem : entities.entrySet()) {
+		for( Map.Entry<EntityType,Integer> thisItem : entities.entrySet()) {
 			line += String.format("%s:%d;", thisItem.getKey().toString(), thisItem.getValue());
 		}
-		for( Map.Entry<BlockTypeEnum,Integer> thisBlock : blocks.entrySet() ) {
+		for( Map.Entry<BlockType,Integer> thisBlock : blocks.entrySet() ) {
 			line += String.format("%s:%d;", thisBlock.getKey().toString(), thisBlock.getValue());
 		}
 		return line;
 	}
 
-	public MessageBlock[] chatMessage() {
-		int numberOfMessageBlocks = 1 + entities.size()*2 + blocks.size()*2;		
-		MessageBlock messages[] = new MessageBlock[numberOfMessageBlocks];
+	public String chatMessage() {
+		String message = String.format("%s%s: ", Color.LightGray.getFormat(), name);
 
-		int i = 0;
-		messages[i] = new MessageBlock(ColorEnum.LightGray, name+": ");		
-
-		for (Map.Entry<EntityTypeEnum,Integer> item : entities.entrySet()) {
-			// Set the current Item's Name messageBlock
-			messages[i+1] = new MessageBlock(ColorEnum.LightPurple, item.getKey().toString());
-			messages[i+2] = new MessageBlock(ColorEnum.LightGray, String.format(
-				" (%d), ", item.getValue()));
-			i = i + 2;
+		for (Map.Entry<EntityType,Integer> item : entities.entrySet()) {
+			message += String.format("%s%s %s(%d), ",
+							Color.LightPurple.getFormat(), item.getKey().toString(),
+							Color.LightGray.getFormat(), item.getValue());
 		}
 
-		for( Map.Entry<BlockTypeEnum,Integer> item: blocks.entrySet() ) {
-			messages[i+1] = new MessageBlock(ColorEnum.LightBlue, item.getKey().toString());
-			messages[i+2] = new MessageBlock(ColorEnum.LightGray, String.format(
-							" (%d), ", item.getValue() ) );
-			i = i + 2;
+		for( Map.Entry<BlockType,Integer> item: blocks.entrySet() ) {
+			message += String.format("%s%s %s(%d), ",
+							Color.LightPurple.getFormat(), item.getKey().toString(),
+							Color.LightGray.getFormat(), item.getValue());
 		}
 		
-		return messages;
+		return message;
 	}
 
 	public void giveTo(Player player) {
-		for( Map.Entry<EntityTypeEnum,Integer> item: entities.entrySet()) {
-			player.giveItem(item.getKey(), item.getValue());
+		for( Map.Entry<EntityType,Integer> item: entities.entrySet()) {
+			World.spawnMiniblock(item.getKey(), item.getValue(), player.getLocation());
+			//player.giveItem(item.getKey(), item.getValue());
 		}
-		for( Map.Entry<BlockTypeEnum,Integer> item: blocks.entrySet() ) {
-			player.giveItem(item.getKey(), item.getValue());
+		for( Map.Entry<BlockType,Integer> item: blocks.entrySet() ) {
+			World.spawnMiniblock(item.getKey(), item.getValue(), player.getLocation());
+			//player.giveItem(item.getKey(), item.getValue());
 		}
 	}
 }
