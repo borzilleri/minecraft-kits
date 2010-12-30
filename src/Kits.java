@@ -18,18 +18,24 @@ public class Kits extends Mod {
 
 	public boolean parseCommand(Player player, String[] tokens) {
 		if( tokens.length < 1 ) return false;
-		String command = tokens[0].substring(1);
+		String command = tokens[0];
 
-		if((command.equalsIgnoreCase("kit") && tokens.length < 2) ||
-						(command.equalsIgnoreCase("kits")) ) {
+		if((command.equalsIgnoreCase("!kit") && tokens.length < 2) ||
+						(command.equalsIgnoreCase("!kits")) ) {
 			player.sendChat("Available Kits:", Color.Gray);
 			kits.printKits(player);
 			return true;
 		}
-		else if( command.equalsIgnoreCase("kit") ) {
+		else if( command.equalsIgnoreCase("!kit") ) {
 			this.generateKit(player, tokens[1]);
 			return true;
 		}
+		else if( command.equalsIgnoreCase("!help") ) {
+			player.sendChat(Color.LightGray.getFormat() + this.getClass().getName() + ": " +
+							Color.White.getFormat() + toString() );
+			return true;
+		}
+
 
 		return false;
 	}
