@@ -30,12 +30,6 @@ public class Kits extends Mod {
 			this.generateKit(player, tokens[1]);
 			return true;
 		}
-		else if( command.equalsIgnoreCase("!help") ) {
-			player.sendChat(Color.LightGray.getFormat() + this.getClass().getName() + ": " +
-							Color.White.getFormat() + toString() );
-			return true;
-		}
-
 
 		return false;
 	}
