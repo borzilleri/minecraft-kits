@@ -8,12 +8,15 @@
  * @author jonathan
  */
 public class Kits extends Mod {
-	protected static Kitlist kits;
+	protected static KitList kits;
+	protected static UsageList kitUses;
 
 	@Override
 	public void activate() {
-		Kits.kits = new Kitlist();
-		Kits.kits.load();
+		kits = new KitList();
+		kits.load();
+		kitUses = new UsageList();
+		kitUses.load();
 	}
 
 	public boolean parseCommand(Player player, String[] tokens) {
@@ -52,8 +55,14 @@ public class Kits extends Mod {
 	
 	protected void generateKit(Player player, String name) {
 		if( kits.kits.containsKey(name) ) {
-			player.sendChat("Generating Kit:"+name);
-			kits.kits.get(name).giveTo(player);
+			Package pkg = kits.kits.get(name);
+			if( UsageList.packageIsUsable(player, pkg) ) {
+				player.sendChat("Generating Kit: "+name, Color.Gray);
+				pkg.giveToPlayer(player);
+			}
+			else {
+				player.sendChat("ERROR: Kit '"+name+"' cannot be used yet.", Color.Red);
+			}
 		}
 		else {
 			player.sendChat("Unknown Kit: "+name);

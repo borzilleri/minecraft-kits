@@ -7,16 +7,17 @@ import java.util.logging.Level;
  *
  * @author jonathan
  */
-public class Kit {
-
+public class Package {
 	protected String name;
+	protected int cooldown;
 	protected EnumMap<EntityType, Integer> entities;
 	protected EnumMap<BlockType, Integer> blocks;
 
-	public Kit(String name, String[] items) {
+	public Package(String name, int cooldown, String[] items) {
 		entities = new EnumMap<EntityType,Integer>(EntityType.class);
 		blocks = new EnumMap<BlockType,Integer>(BlockType.class);
 		this.name = name;
+		this.cooldown = (0 >= cooldown) ? 0 : cooldown;
 
 		//EntityType itemType;
 		Integer number;
@@ -59,6 +60,12 @@ public class Kit {
 	public String getName() {
 		return name;
 	}
+	public int getNumItems() {
+		return blocks.size() + entities.size();
+	}
+	public int getCooldown() {
+		return cooldown;
+	}
 
 	@Override
 	public String toString() {
@@ -74,24 +81,23 @@ public class Kit {
 	}
 
 	public String chatMessage() {
-		String message = String.format("%s%s: ", Color.LightGray.getFormat(), name);
+		String message = Color.LightGray.getFormat() + name + ": ";
+
 
 		for (Map.Entry<EntityType,Integer> item : entities.entrySet()) {
-			message += String.format("%s%s %s(%d), ",
-							Color.LightPurple.getFormat(), item.getKey().toString(),
-							Color.LightGray.getFormat(), item.getValue());
+			message += Color.LightPurple.getFormat() + item.getKey().toString() + " "
+							+ Color.LightGray.getFormat() + "("+item.getValue()+"), ";
 		}
 
 		for( Map.Entry<BlockType,Integer> item: blocks.entrySet() ) {
-			message += String.format("%s%s %s(%d), ",
-							Color.LightPurple.getFormat(), item.getKey().toString(),
-							Color.LightGray.getFormat(), item.getValue());
+			message += Color.LightPurple.getFormat() + item.getKey().toString() + " "
+							+ Color.LightGray.getFormat() + "("+item.getValue()+"), ";
 		}
 		
 		return message;
 	}
 
-	public void giveTo(Player player) {
+	public void giveToPlayer(Player player) {
 		for( Map.Entry<EntityType,Integer> item: entities.entrySet()) {
 			World.spawnMiniblock(item.getKey(), item.getValue(), player.getLocation());
 			//player.giveItem(item.getKey(), item.getValue());
