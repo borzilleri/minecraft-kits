@@ -40,10 +40,8 @@ public class Package {
 	}
 
 	public boolean addItem(Material item, int quantity) {
-		if( 0 >= quantity ) return false;
-		if( items.containsKey(item) ) {
-			items.put(item, items.get(item)+quantity);
-		}
+		quantity = Math.max(quantity, 1) + (items.containsKey(item) ? items.get(item) : 0);
+		items.put(item, quantity);
 		return true;
 	}
 
@@ -54,7 +52,7 @@ public class Package {
 	}
 
 	public String getChatMessage() {
-		String message = ChatColor.LIGHT_PURPLE + name + ": ";
+		String message = ChatColor.BLUE + name + ": ";
 		for( Map.Entry<Material,Integer> item : items.entrySet()) {
 			message += ChatColor.LIGHT_PURPLE + item.getKey().toString() + " "
 							+ ChatColor.GRAY + "("+item.getValue()+"), ";

@@ -15,6 +15,7 @@ public class PackageList extends FileLoader {
 	}
 
 	public void listPackages(Player player) {
+		player.sendMessage(ChatColor.GRAY + "Available Kits:");
 		for( Map.Entry<String, Package> pkg: packages.entrySet() ) {
 			player.sendMessage(pkg.getValue().getChatMessage());
 		}
@@ -53,13 +54,21 @@ public class PackageList extends FileLoader {
 				quantity = 1;
 			}
 
-			try {
-				item = Material.valueOf(itemInfo[0]);
+			item = Material.getMaterial(itemInfo[0]);
+			if( item != null ) {
 				pkg.addItem(item, quantity);
 			}
-			catch( IllegalArgumentException ex ) {
+			else {
+				System.out.println("Invalid package item: "+itemInfo[0]);
 			}
 		}
+
+		if( 0 >= pkg.getNumItems() ) {
+			System.out.println("Package has no valid items: "+pkg.getName());
+			return;
+		}
+
+		packages.put(pkg.getName(), pkg);
 	}
 
 	public void givePlayerPackage(Player player, String pkgName) {
