@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Player;
+import org.bukkit.entity.Player;
 
 public class PackageList extends FileLoader {
 	protected HashMap<String, Package> packages;

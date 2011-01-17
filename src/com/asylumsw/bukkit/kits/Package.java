@@ -3,7 +3,7 @@ package com.asylumsw.bukkit.kits;
 import java.util.EnumMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
-import org.bukkit.ItemStack;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
