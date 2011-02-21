@@ -14,11 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Kits extends JavaPlugin {
 	private KitsPlayerListener playerListener;
-
-	public Kits(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-		super(pluginLoader, instance, desc, folder, plugin, cLoader);
-	}
-
+	
 	@Override
 	public void onEnable() {
 		PackageList packages = new PackageList();
