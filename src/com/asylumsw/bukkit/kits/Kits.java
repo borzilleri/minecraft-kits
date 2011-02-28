@@ -37,7 +37,9 @@ public class Kits extends JavaPlugin {
 			if( args[0].equalsIgnoreCase("list") ) {
 				packages.listPackages((Player)sender);
 			}
-			packages.givePlayerPackage((Player)sender, args[0]);
+			else {
+				packages.givePlayerPackage((Player)sender, args[0]);
+			}
 			return true;
 		}
 		
