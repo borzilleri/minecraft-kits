@@ -1,3 +1,14 @@
 name: Kits
 main: com.asylumsw.bukkit.kits.Kits
-version: 2.0
+version: 2.0.1
+author: Jonathan Borzilleri
+description: >
+             Allows groups of items to be spawned.
+commands:
+  kit:
+    description: Spawn an item kit, or list all kits.
+    usage: |
+           /<command> list
+           /<command> <kit name>
+           Example: /<command> list - lists all available kits.
+           Example: /<command> pick - spawns the 'pick' kit.
