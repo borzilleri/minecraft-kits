@@ -10,5 +10,4 @@ commands:
     usage: |
            /<command> list
            /<command> <kit name>
-           Example: /<command> list - lists all available kits.
            Example: /<command> pick - spawns the 'pick' kit.

@@ -1,11 +1,14 @@
 package com.asylumsw.bukkit.kits;
 
+import java.util.Calendar;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -13,17 +16,16 @@ import org.bukkit.Material;
  */
 public class Package {
 	private String name;
-	private EnumMap<Material, Integer> items;
+	private EnumMap<Material, Integer> items = new EnumMap<Material, Integer>(Material.class);
 	private int cooldown;
+	private HashMap<String, Long> playerUses = new HashMap<String, Long>();
 
 	public Package() {
-		items = new EnumMap<Material, Integer>(Material.class);
 	}
 
 	public Package(String name, int cooldown) {
 		this.name = name;
 		this.cooldown = cooldown;
-		items = new EnumMap<Material, Integer>(Material.class);
 	}
 
 	public void setName(String name) {
@@ -45,7 +47,30 @@ public class Package {
 		return true;
 	}
 
-	public void spawnAt(Location loc) {
+	public boolean spawnAtPlayer(Player player) {
+		if( playerUses.containsKey(player.getName()) ) {
+			/**
+			 * Only do cooldown checking if the player has used this kit before,
+			 * (and thus triggered a cooldown)
+			 */
+
+			// Calcualte when this package will be usable by this player again.
+			Calendar pkgUsableTime = Calendar.getInstance();
+			pkgUsableTime.setTimeInMillis(playerUses.get(player.getName()));
+			pkgUsableTime.add(Calendar.SECOND, cooldown);
+
+			if( pkgUsableTime.after(Calendar.getInstance()) ) {
+				player.sendMessage(ChatColor.RED+"ERROR: Kit '"+name+"' is not available to you yet.");
+				return false;
+			}
+		}
+
+		playerUses.put(player.getName(), Calendar.getInstance().getTimeInMillis());
+		spawnAtLocation(player.getLocation());
+		return true;
+	}
+	
+	public void spawnAtLocation(Location loc) {
 		for( Map.Entry<Material,Integer> item : items.entrySet()) {
 			loc.getWorld().dropItem(loc, new ItemStack(item.getKey(), item.getValue()));
 		}
