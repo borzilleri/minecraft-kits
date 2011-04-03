@@ -10,4 +10,5 @@ commands:
     usage: |
            /<command> list
            /<command> <kit name>
+           /<command> reload - Reloads the Kit definitions (Admin only)
            Example: /<command> pick - spawns the 'pick' kit.

@@ -28,6 +28,14 @@ public class Package {
 		this.cooldown = cooldown;
 	}
 
+	public void update(Package pkg) {
+		if( !name.equalsIgnoreCase(pkg.getName()) ) return;
+
+		cooldown = pkg.getCooldown();
+		items = pkg.items;
+		playerUses.putAll(pkg.playerUses);
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
