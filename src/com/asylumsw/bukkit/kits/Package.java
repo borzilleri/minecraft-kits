@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Location;
@@ -68,7 +69,10 @@ public class Package {
 			pkgUsableTime.add(Calendar.SECOND, cooldown);
 
 			if( pkgUsableTime.after(Calendar.getInstance()) ) {
-				player.sendMessage(ChatColor.RED+"ERROR: Kit '"+name+"' is not available to you yet.");
+				player.sendMessage(ChatColor.DARK_GRAY+"[kits] "+
+								ChatColor.RED+"ERROR: Kit '"+name+"' is unavailable,"+
+								getDurationString(TimeUnit.MILLISECONDS.toSeconds(pkgUsableTime.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()))+
+								ChatColor.RED+" remaining.");
 				return false;
 			}
 		}
@@ -90,7 +94,7 @@ public class Package {
 			message += ChatColor.LIGHT_PURPLE + item.getKey().toString() + " "
 							+ ChatColor.GRAY + "("+item.getValue()+"), ";
 		}
-		return message;
+		return message.substring(0, message.length()-2)+getDurationString(cooldown);
 	}
 
 	@Override
@@ -101,6 +105,17 @@ public class Package {
 		}
 		return line;
 	}
-	
+
+	protected String getDurationString(long duration) {
+		if( 0 >= duration ) return "";
+
+		return String.format(" %s[%s%02d%sh%s%02d%sm%s%02d%ss]",
+			ChatColor.GRAY, ChatColor.DARK_AQUA, TimeUnit.SECONDS.toHours(duration), ChatColor.GRAY,
+			ChatColor.DARK_AQUA, TimeUnit.SECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(duration)),
+			ChatColor.GRAY, ChatColor.DARK_AQUA,
+			duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(duration)),
+			ChatColor.GRAY
+		);
+	}
 
 }
