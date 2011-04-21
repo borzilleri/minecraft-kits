@@ -118,4 +118,8 @@ public class Package {
 		);
 	}
 
+	public String getCooldownsChatMessage() {
+		return "";
+	}
+
 }

@@ -11,4 +11,5 @@ commands:
            /<command> list
            /<command> <kit name>
            /<command> reload - Reloads the Kit definitions (Admin only)
+           /<command> cooling - Show in progress cooldowns (Admin only)
            Example: /<command> pick - spawns the 'pick' kit.

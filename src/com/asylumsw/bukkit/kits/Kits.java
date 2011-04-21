@@ -49,6 +49,15 @@ public class Kits extends JavaPlugin {
 									ChatColor.RED + "ERROR: This command is restricted to Admins.");
 				}
 			}
+			else if (args[0].equalsIgnoreCase("cooling") ) {
+				if( sender.isOp() ) {
+					listPackageCooldowns(sender);
+				}
+				else {
+					sender.sendMessage(ChatColor.DARK_GRAY+"[kits] "+
+									ChatColor.RED+"ERROR: This command is restricted to Admins.");
+				}
+			}
 			else {
 				if (!(sender instanceof Player)) {
 					sender.sendMessage(ChatColor.RED+"[kits] ERROR: Kits can only be spawned by players.");
@@ -85,6 +94,17 @@ public class Kits extends JavaPlugin {
 		}
 	}
 
+	protected void listPackageCooldowns(CommandSender sender) {
+		sender.sendMessage(ChatColor.DARK_GRAY+"[kits] "+
+						ChatColor.GRAY+"Current Cooldowns:");
+		for(Map.Entry<String,Package> pkg: packages.entrySet()) {
+			String msg = pkg.getValue().getCooldownsChatMessage();
+			if( null == msg ) continue;
+			sender.sendMessage(ChatColor.DARK_GRAY+"[kits] "+
+							msg);
+		}
+	}
+	
 	protected void givePlayerPackage(Player player, String pkgName) {
 		if (!packages.containsKey(pkgName)) {
 			player.sendMessage(ChatColor.RED + "ERROR: Unknown kit: " + pkgName);

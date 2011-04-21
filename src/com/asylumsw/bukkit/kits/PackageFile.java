@@ -86,6 +86,13 @@ public class PackageFile {
 			return null;
 		}
 
+		String pkgName = pkgInfo[0];
+		if( pkgName.equalsIgnoreCase("list") || pkgName.equalsIgnoreCase("reload") ||
+						pkgName.equalsIgnoreCase("cooling") ) {
+			System.out.println("Invalid Package name: "+pkgName);
+			return null;
+		}
+
 		Package pkg;
 		int cooldown;
 
@@ -96,7 +103,7 @@ public class PackageFile {
 			cooldown = 0;
 		}
 
-		pkg = new Package(pkgInfo[0], cooldown);
+		pkg = new Package(pkgName, cooldown);
 
 		String[] itemInfo;
 		int quantity;
